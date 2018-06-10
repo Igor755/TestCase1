@@ -14,29 +14,37 @@ import com.google.gson.Gson;
 
 public class CurrencyConvertor {
 
-    // API Provider URL http://data.fixer.io/api/latest?access_key=395a99dddbab6370cd145f2534fbc113&usd
+    // API Provider URL http://data.fixer.io/api/latest?access_key=395a99dddbab6370cd145f2534fbc113&=base:usd
+   // https://data.fixer.io/api/latest?access_key=395a99dddbab6370cd145f2534fbc113&base = USD
     private static final String API_PROVDIER = "http://data.fixer.io/api/";
-    private static final String KEY = "395a99dddbab6370cd145f2534fbc113&";
+    private static final String KEY = "395a99dddbab6370cd145f2534fbc113";
 
     public static double convert(String fromCurrencyCode, String toCurrencyCode) {
 
+        double conversionRate = 0.0;
         if ((fromCurrencyCode != null && !fromCurrencyCode.isEmpty())
                 && (toCurrencyCode != null && !toCurrencyCode.isEmpty())) {
 
-            CurrencyConversionResponse response = getResponse(API_PROVDIER + "latest?access_key="+ KEY + fromCurrencyCode);
+            CurrencyConversionResponse response = getResponse(API_PROVDIER+"latest?access_key="+KEY+"&"+"USD");
 
             if (response != null) {
 
-                String rate = response.getRates().get(toCurrencyCode);
+                double conversionRateUSD = 0.0;
+                String rateEURtoUSD= response.getRates().get("USD"); // 1 EUR = x USD
+                if (rateEURtoUSD != null)
+                    conversionRateUSD  = Double.valueOf(rateEURtoUSD);
 
-                double conversionRate = Double.valueOf((rate != null) ? rate : "0.00");
+                String rate = response.getRates().get(toCurrencyCode); // 1 EUR = x toCurrencyCode
 
-                return conversionRate;
+                if (rate != null)
+                    conversionRate  = Double.valueOf(rate);
+
+                return conversionRate / conversionRateUSD;
             }
 
         }
 
-        return 0.00;
+        return conversionRate;
     }
 
     // Method to get the response from API
@@ -91,11 +99,10 @@ public class CurrencyConvertor {
 
     public static void main(String[] args) throws IOException {
 
-        Scanner scanner = new Scanner(System.in);
-
 
         String fromCurrencyCode = "USD";
 
+        Scanner scanner = new Scanner(System.in);
         System.out.println("Enter the price :");
         double amount = scanner.nextDouble();
 
@@ -110,7 +117,6 @@ public class CurrencyConvertor {
 
             System.out.println("Hi, The " + amount + " " + fromCurrencyCode + " is equivalent to " + (coversionRate * amount) + " " + toCurrencyCode + " today.");
             scanner.close();
-
 
         } else if (toCurrencyCode.equals("EUR")) {
             double coversionRate = convert(fromCurrencyCode, toCurrencyCode);

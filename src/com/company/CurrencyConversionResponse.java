@@ -20,7 +20,8 @@ public class CurrencyConversionResponse {
         return rates;
     }
 
-    public void setRates(Map<String, String> rates) {
+    public void setRates(Map<String, String> rates)
+    {
         this.rates = rates;
     }
 
