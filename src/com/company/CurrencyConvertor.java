@@ -96,10 +96,10 @@ public class CurrencyConvertor {
 
         Scanner scanner = new Scanner(System.in);
 
-        System.out.println("What is your currency code ?");
-        String fromCurrencyCode = scanner.next();
 
-        System.out.println("Enter the Amount :");
+        String fromCurrencyCode  = "USD";
+
+        System.out.println("Enter the price :");
         double amount = scanner.nextDouble();
 
         System.out.println("Enter the Currency Code that you want to covert : ");
